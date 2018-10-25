@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Add icon library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>  </title>
+        <style> 
+            .delete {
+                   
+                    border: none;
+                    color: rgb(36, 34, 34);                    
+                    font-size: 16px;
+                    cursor: pointer;
+                    float: right; 
+                }
+            .edit {
+                
+                border: none;
+                background-color: blue;
+                color: white ;                   
+                font-size: 16px;
+                cursor: pointer;
+                position: absolute;                
+                right: 410px;                
+            } 
+            #form{
+                display:none;
+            }
+        </style>
+    </head>
+    <body>
+       <h1 style = 'text-align: center;margin:20px'>Quotify</h1>
+       
+       <div id = 'root' class = 'root'>  
+            <a href = 'https://talaikis.com/api/quotes/random/' class = 'atag' style='margin:0px 0px 0px 300px'>Random Quote(API) |</a> 
+            <a href = 'saved-quotes.html' class = 'localTag' style='margin:0px 0px 0px 5px'>Random Quote(Local) |</a>  
+            <a href = 'new-quote.html' class = 'addQuote' style='margin:0px 0px 0px 5px'>Add Quote |</a>  
+            <a href = 'list-all-saved-quotes.html' class = 'ListAllQuotes' style='margin:0px 0px 0px 5px'>List All Quotes(Local)</a>  
+       </div>
+        <form id="form" >
+            <textarea id='quote' class='textbox'  rows="5" cols='90' style='margin:10px 700px 0px 300px'></textarea>
+            <input type = 'text' id='author' class='author' style='margin:10px 700px 0px 300px;width:49%'/>             
+            <button type="button" id="update" onclick = 'updateQuote(this)'style='margin:10px 0px 0px 300px'>Update</button>
+            <button type="button" id="cancel" onclick = 'cancelQuote(this)'style='margin:10px 700px 0px 10px'>Cancel</button>
+        </form>
+       <script src = 'https://unpkg.com/axios/dist/axios.min.js'></script>  
+        <script>
+            rootHandle = document.getElementById('root');
+            quoteHandle = document.getElementById('quote');
+            authorHandle = document.getElementById('author');
+            updateHandle = document.getElementById('update');
+            cancelHandle = document.getElementById('cancel');
+            var formHandle = document.getElementById('form');
+            storedQuotes = JSON.parse(localStorage.getItem('quotes'));
+            var index = 0; 
+            window.onload = function () {
+                    for (let i = 0; i < storedQuotes.length; i++) 
+                    {
+                        const ptag = document.createElement('p');
+                        const hrTag = document.createElement('hr');
+                        ptag.setAttribute('id', index++);
+                        ptag.setAttribute('class', 'para');
+                        ptag.setAttribute('style', 'margin:10px 0px 0px 300px;background-color:rgb(240, 239, 239);width:50%;font-family:cursive;');
+                        hrTag.setAttribute('id',ptag.id);
+                        hrTag.setAttribute('class', 'horizontal');
+                        hrTag.setAttribute('style', 'margin:10px 400px 0px 310px;');
+                        ptag.innerHTML = `${storedQuotes[i].quote}<br/>~${storedQuotes[i].author}
+                        <button id = '${ptag.id}' class = 'edit' onclick="performEdit(this)"><i class="fa fa-edit"></i></button>
+                        <button id = '${ptag.id}' class = 'delete' onclick="performDelete(this)"><i class="fa fa-trash"></i></button>`;
+                        rootHandle.appendChild(ptag);
+                        rootHandle.appendChild(hrTag);
+                        
+                    }
+            }
+            function performDelete(item) {
+                var list = document.getElementsByClassName('para');
+                var list1 = document.getElementsByClassName('horizontal');
+                var list2 = document.getElementsByClassName('edit');
+                var list3 = document.getElementsByClassName('delete');
+
+                for (var i = 0; i < list.length; i++) {
+                    if (item.id == list[i].id) {
+                        index = list[i].id;
+                        list[i].parentNode.removeChild(list[i]);
+                        list1[i].parentNode.removeChild(list1[i]);
+                    }
+                }
+                for (var i = 0; i < list.length; i++) {
+
+                    list[i].id = i;
+                    list1[i].id = list[i].id;
+                    list2[i].id = list[i].id;
+                    list3[i].id = list[i].id;
+
+                }
+                for (var j = 0; j < storedQuotes.length; j++) {
+                    if (index == storedQuotes.indexOf(storedQuotes[j])) {
+                        storedQuotes.splice(index, 1);
+                    }
+                }
+                localStorage.setItem('quotes', JSON.stringify(storedQuotes));
+            }
+            function performEdit(item)
+            {
+                var list = document.getElementsByTagName('p');
+                var index = 0;
+                for (var i = 0; i < list.length; i++) {
+                    if (item.id == list[i].id) {
+                        index = list[i].id;
+                    }
+                }
+                paraHandle = document.getElementById(`${index}`);
+                formHandle.setAttribute('style','display:initial');
+                paraHandle.replaceWith(formHandle);
+                for (var j = 0; j < storedQuotes.length; j++) {
+                    if (index == storedQuotes.indexOf(storedQuotes[j])) 
+                    {
+                        quoteHandle.value = storedQuotes[j].quote;
+                        authorHandle.value = storedQuotes[j].author;
+                    }
+                }
+                updateHandle.setAttribute('id',`${index}`);
+                cancelHandle.setAttribute('id',`${index}`);
+            }
+
+            function updateQuote(item)
+            {
+                var list = document.getElementsByTagName('p');
+                for (var j = 0; j < storedQuotes.length; j++) {
+                    if (item.id == storedQuotes.indexOf(storedQuotes[j])) 
+                    {
+                        storedQuotes[j].quote = quoteHandle.value;
+                        storedQuotes[j].author = authorHandle.value;                            
+                        formHandle.replaceWith(paraHandle);
+                        var index = j;
+                    }
+                }
+                list[index].innerHTML = `${quoteHandle.value}<br />~${authorHandle.value}
+                <button id = '${list[index].id}' class = 'edit' onclick="performEdit(this)"><i class="fa fa-edit"></i></button>
+                <button id = '${list[index].id}' class = 'delete' onclick="performDelete(this)"><i class="fa fa-trash"></i></button>`;
+                localStorage.setItem('quotes',JSON.stringify(storedQuotes));
+                formHandle.setAttribute('style','display:none');
+            }
+            function cancelQuote(item)
+            {
+                quoteHandle.value = '';
+                author.value = '';
+                formHandle.replaceWith(paraHandle);
+                formHandle.setAttribute('style','display:none');
+            }
+        </script>
+    </body>
+</html>
+
+
