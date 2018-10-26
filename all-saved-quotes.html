@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Add icon library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <title>  </title>
+        <style> 
+            .delete {
+                   
+                    border: none;
+                    color: rgb(36, 34, 34);                    
+                    font-size: 16px;
+                    cursor: pointer;
+                    float: right; 
+                    
+                }           
+        </style>
+    </head>
+    <body>
+       <h1 style = 'text-align: center;margin:20px'>Quotify</h1>
+       
+       <div id = 'root' class = 'root' style = 'height:1000px'>  
+            <a href = 'https://talaikis.com/api/quotes/random/' class = 'atag' style='margin:0px 0px 0px 300px'>Random Quote(API) |</a> 
+            <a href = 'localStorage.getItem' class = 'localTag' style='margin:0px 0px 0px 5px' onclick="preventDefault()">Random Quote(Local) |</a>  
+            <a href = 'localStorage.getItem' class = 'addQuote' style='margin:0px 0px 0px 5px' onclick="preventDefault()">Add Quote |</a>  
+            <a href = 'localStorage.getItem' class = 'ListAllQuotes' style='margin:0px 0px 0px 5px' onclick="preventDefault()">List All Quotes(Local)</a>  
+       </div>
+       
+       <script src = 'https://unpkg.com/axios/dist/axios.min.js'></script>  
+        <script>
+            rootHandle = document.getElementById('root');
+            storedQuotes = JSON.parse(localStorage.getItem('quotes'));
+            var index = 0;
+            window.onload = function () {
+                    for (let i = 0; i < storedQuotes.length; i++) 
+                    {
+                        const ptag = document.createElement('p');
+                        const hrTag = document.createElement('hr');
+                        ptag.setAttribute('id', index++);
+                        ptag.setAttribute('style', 'margin:10px 0px 0px 300px;background-color:rgb(240, 239, 239);width:50%;font-family:cursive;');
+                        hrTag.setAttribute('id',ptag.id);
+                        hrTag.setAttribute('style', 'margin:10px 400px 0px 310px;');
+                        ptag.innerHTML = `${storedQuotes[i].quote}<br/>~${storedQuotes[i].author}<button id = '${ptag.id}' class = 'delete' onclick="performDelete(this)"><i class="fa fa-trash"></i></button>`;
+                        rootHandle.appendChild(ptag);
+                        rootHandle.appendChild(hrTag);
+                        
+                    }
+            }
+            function performDelete(item) {
+                var list = document.getElementsByTagName('p');
+            var list1 = document.getElementsByTagName('hr');
+            var list2 = document.getElementsByTagName('button')
+                    var index = 0; 
+                    for (var i = 0; i < list.length; i++) {
+                        if (item.id == list[i].id) {
+                            index = list[i].id;
+                        list[i].parentNode.removeChild(list[i]); 
+                        list1[i].parentNode.removeChild(list1[i]); 
+                        }
+                    }
+                    for (var i = 0; i < list.length; i++) {
+                        
+                       list[i].id = i;
+                       list1[i].id = i;
+                       list2[i].id = i;
+                        
+                    } 
+                    for (var j = 0; j < storedQuotes.length; j++) {
+                        if (index == storedQuotes.indexOf(storedQuotes[j])) 
+                        {
+                            storedQuotes.splice(index, 1);
+                        }   
+                    }
+                    localStorage.setItem('quotes',JSON.stringify(storedQuotes)); 
+                }
+        </script>
+    </body>
+</html>
+
+

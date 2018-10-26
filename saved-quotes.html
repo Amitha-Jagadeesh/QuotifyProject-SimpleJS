@@ -3,23 +3,23 @@
 
 <head>
     <title> </title>
+    <link  rel = "stylesheet" type = "text/css" href = "index-Css.css"/>
     <style>
     </style>
 </head>
 
 <body>
-
-    <h1 style='text-align: center;margin:5px'>Quotify</h1>
-
-    <div id='root' class='root' style='height:500px'>
-        <a href = 'https://talaikis.com/api/quotes/random/' class = 'atag' style='margin:0px 0px 0px 300px'>Random Quote(API) |</a> 
-        <a href = 'saved-quotes.html' class = 'localTag' style='margin:0px 0px 0px 5px'>Random Quote(Local) |</a>  
-        <a href = 'new-quote.html' class = 'addQuote' style='margin:0px 0px 0px 5px'>Add Quote |</a>  
-        <a href = 'list-all-saved-quotes.html' class = 'ListAllQuotes' style='margin:0px 0px 0px 5px'>List All Quotes(Local)</a>  
-        <p id='quote' class='quote' style='margin:20px 0px 0px 300px;background-color: rgb(240, 239, 239);width:50%;font-family:cursive'></p>
-        <button onclick="getLocalquote()" style='margin:20px 0px 0px 300px'>Get Another Quote</button> 
+    <h1 class = 'h1'>Quotify</h1>
+    <div class = 'container'>
+        <div id='root' class='root'>
+            <a href = 'https://talaikis.com/api/quotes/random/' class = 'atag'>Random Quote(API) |</a> 
+            <a href = 'saved-quotes.html' class = 'localTag'>Random Quote(Local) |</a>  
+            <a href = 'new-quote.html' class = 'addQuote'>Add Quote |</a>  
+            <a href = 'list-all-saved-quotes.html' class = 'ListAllQuotes'>List All Quotes(Local)</a>  
+            <p id='quote' class='quote'></p>
+            <button class = 'GetLocalQuote' onclick="getLocalquote()">Get Another Quote</button> 
+        </div>
     </div>
-
 
     <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
     <script>
